@@ -81,20 +81,33 @@ export class News extends Component {
       loading: false
     }
   }
+  async componentDidMount() {
+    let url = "https://newsapi.org/v2/top-headlines?country=in&apiKey=acc67ffeb78b4478b2f62fff00e5827e"
+    let parsedData
+    fetch(url).then(response => response.json()).then(data=> {console.log(data)})
+    // let parsedData = await data.json()
+    // console.log(parsedData);
+    /*async componentDidMount() {
+        fetch("url").then((response) => response.json())
+        .then((data) => {
+            this.setState({
+                articles: data.articles
+            });
+        });
+    },
+    */
+    // this.setState({this.articles:})
+
+  }
   render() {
     return (
       <div className='container my-3'><h2>NewsChimp - Top Headlines</h2>
         <div className="row">
-          <div className="col-md-4">
-            <NewsItem title="My title" description="My description" imageUrl="https://a57.foxsports.com/statics.foxsports.com/www.foxsports.com/content/uploads/2023/08/1408/814/07.31.23_NFL-Odds-History_16x9.jpg?ve=1&tl=1" />
-          </div>
-          <div className="col-md-4">
-
-            <NewsItem title="My title" description="My description" />
-          </div>
-          <div className="col-md-4">
-            <NewsItem title="My title" description="My description" />
-          </div>
+          {this.state.articles.map((article) =>
+            <div className="col-md-4" key={article.url} >
+              <NewsItem title={article.title} description={article.description} imageUrl={article.urlToImage} newsUrl={article.url} />
+            </div>)
+          }
         </div>
       </div>
     )
