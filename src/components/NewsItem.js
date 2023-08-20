@@ -8,10 +8,10 @@ export class NewsItem extends Component {
     return (
       <div className='my-3'><div className="card" style={{ "width": "18rem" }}>
         <img src={imageUrl ? imageUrl : altImageUrl} className="card-img-top" alt="https://a57.foxsports.com/statics.foxsports.com/www.foxsports.com/content/uploads/2023/08/1408/814/07.31.23_NFL-Odds-History_16x9.jpg?ve=1&tl=1" />
-        <div className="card-body">
+        <div className="card-body ">
           <h5 className="card-title">{title}</h5>
           <p className="card-text">{description}</p>
-          <a href={newsUrl} target='_blank' className="btn btn-primary">Go somewhere</a>
+          <a href={newsUrl} target='_blank' rel="noreferrer" className="btn btn-dark">Go somewhere</a>
         </div>
       </div></div>
     )

@@ -77,37 +77,55 @@ export class News extends Component {
   constructor() {
     super();
     this.state = {
-      articles: this.articles,
-      loading: false
+      articles: [],
+      loading: false,
+      page: 1,
+      pageSize: 10
     }
   }
   async componentDidMount() {
-    let url = "https://newsapi.org/v2/top-headlines?country=in&apiKey=acc67ffeb78b4478b2f62fff00e5827e"
-    let parsedData
-    fetch(url).then(response => response.json()).then(data=> {console.log(data)})
-    // let parsedData = await data.json()
-    // console.log(parsedData);
-    /*async componentDidMount() {
-        fetch("url").then((response) => response.json())
-        .then((data) => {
-            this.setState({
-                articles: data.articles
-            });
-        });
-    },
-    */
-    // this.setState({this.articles:})
+    let url = "https://newsapi.org/v2/top-headlines?country=in&apiKey=acc67ffeb78b4478b2f62fff00e5827e&page=" + this.state.page + "&pageSize=" + this.state.pageSize
+    let data = await fetch(url)
+    let parsedData = await data.json()
+    console.log(this.state.totalResults, this.state.pageSize, this.state.page);
+    this.setState({ articles: parsedData.articles, totalResults: parsedData.totalResults })
+  }
 
+  handlePrevClick = async () => {
+    let page = this.state.page - 1
+    console.log("Page before building url:", page);
+    this.setState({ page: page })
+    let url = "https://newsapi.org/v2/top-headlines?country=in&apiKey=acc67ffeb78b4478b2f62fff00e5827e&page=" + page + "&pageSize=" + this.state.pageSize
+    let data = await fetch(url)
+    let parsedData = await data.json()
+    console.log(parsedData.articles);
+    this.setState({ articles: parsedData.articles })
+    console.log("Previous");
+  }
+  handleNextClick = async () => {
+    let page = this.state.page + 1
+    console.log("Page before building url:", page);
+    this.setState({ page: page})
+    let url = "https://newsapi.org/v2/top-headlines?country=in&apiKey=acc67ffeb78b4478b2f62fff00e5827e&page=" + page + "&pageSize=" + this.state.pageSize
+    let data = await fetch(url)
+    let parsedData = await data.json()
+    console.log(parsedData.articles);
+    this.setState({ articles: parsedData.articles })
+    console.log(page);
   }
   render() {
     return (
-      <div className='container my-3'><h2>NewsChimp - Top Headlines</h2>
+      <div className='container my-3'><h1>NewsChimp - Top Headlines</h1>
         <div className="row">
           {this.state.articles.map((article) =>
             <div className="col-md-4" key={article.url} >
               <NewsItem title={article.title} description={article.description} imageUrl={article.urlToImage} newsUrl={article.url} />
             </div>)
           }
+        </div>
+        <div className="container d-flex justify-content-between">
+          <button type="button" className="btn btn-dark" onClick={this.handlePrevClick} disabled={this.state.page === 1}>&larr; Previous</button>
+          <button type="button" className="btn btn-dark" onClick={this.handleNextClick} disabled={Math.ceil(this.state.totalResults / this.state.pageSize) <= this.state.page}>Next &rarr;</button>
         </div>
       </div>
     )
