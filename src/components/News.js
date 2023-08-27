@@ -87,7 +87,7 @@ export class News extends Component {
     category: PropTypes.string
   }
   constructor(props) {
-    super();
+    super(props);
     this.state = {
       articles: [],
       loading: false,
@@ -95,6 +95,7 @@ export class News extends Component {
       pageSize: props.pageSize,
       category: props.category.toLowerCase()
     }
+    document.title = `NewsChimp | ${this.capitalizeFirstLetter(this.props.category)}`
   }
   async componentDidMount() {
     this.setState({ loading: true })
@@ -126,21 +127,24 @@ export class News extends Component {
     this.updateNews()
   }
 
-  updateNews = async() => {
+  updateNews = async () => {
     this.setState({ loading: true })
     let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=acc67ffeb78b4478b2f62fff00e5827e&page=` + this.state.page + "&pageSize=" + this.state.pageSize
     let data = await fetch(url)
     let parsedData = await data.json()
     this.setState({ articles: parsedData.articles, loading: false })
   }
+  capitalizeFirstLetter = (string) => {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
   render() {
     return (
-      <div className='container my-3'><h1 className='text-center my-2'>NewsChimp - Top Headlines</h1>
+      <div className='container my-3'><h1 className='text-center my-2'>NewsChimp - Top Headlines from {this.capitalizeFirstLetter(this.state.category)}</h1>
         {this.state.loading ? <div style={{ minHeight: "75vh" }}><Spinner></Spinner></div> :
           <div className="row" style={{ minHeight: "75vh" }}>
             {this.state.articles.map((article) =>
               <div className="col-md-4" key={article.url} >
-                <NewsItem title={article.title} description={article.description} imageUrl={article.urlToImage} newsUrl={article.url} author={article.author?article.author : "Staff"} date={article.publishedAt} source={article.source.name}/>
+                <NewsItem title={article.title} description={article.description} imageUrl={article.urlToImage} newsUrl={article.url} author={article.author ? article.author : "Staff"} date={article.publishedAt} source={article.source.name} />
               </div>)
             }
           </div>}
