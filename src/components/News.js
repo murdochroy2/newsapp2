@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import NewsItem from './NewsItem'
 import Spinner from './Spinner';
 import PropTypes from 'prop-types'
+import InfiniteScroll from 'react-infinite-scroll-component';
 
 export class News extends Component {
   articles = [
@@ -78,7 +79,7 @@ export class News extends Component {
   ]
   static defaultProps = {
     country: "in",
-    pageSize: 3,
+    pageSize: 20,
     category: "general"
   }
   static prpoTypes = {
@@ -93,7 +94,7 @@ export class News extends Component {
       loading: false,
       page: 1,
       pageSize: props.pageSize,
-      category: props.category.toLowerCase()
+      category: props.category.toLowerCase(),
     }
     document.title = `NewsChimp | ${this.capitalizeFirstLetter(this.props.category)}`
   }
@@ -132,27 +133,38 @@ export class News extends Component {
     let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=acc67ffeb78b4478b2f62fff00e5827e&page=` + this.state.page + "&pageSize=" + this.state.pageSize
     let data = await fetch(url)
     let parsedData = await data.json()
-    this.setState({ articles: parsedData.articles, loading: false })
+    this.setState({ articles: this.state.articles.concat(parsedData.articles), loading: false })
   }
   capitalizeFirstLetter = (string) => {
     return string.charAt(0).toUpperCase() + string.slice(1);
   }
+  fetchMoreData = async () => {
+    let nextPage = this.state.page + 1
+    this.setState({ page: nextPage })
+    this.updateNews()
+  };
   render() {
     return (
-      <div className='container my-3'><h1 className='text-center my-2'>NewsChimp - Top Headlines from {this.capitalizeFirstLetter(this.state.category)}</h1>
-        {this.state.loading ? <div style={{ minHeight: "75vh" }}><Spinner></Spinner></div> :
-          <div className="row" style={{ minHeight: "75vh" }}>
-            {this.state.articles.map((article) =>
-              <div className="col-md-4" key={article.url} >
-                <NewsItem title={article.title} description={article.description} imageUrl={article.urlToImage} newsUrl={article.url} author={article.author ? article.author : "Staff"} date={article.publishedAt} source={article.source.name} />
-              </div>)
-            }
-          </div>}
-        <div className="container d-flex justify-content-between">
-          <button type="button" className="btn btn-dark" onClick={this.handlePrevClick} disabled={this.state.page === 1}>&larr; Previous</button>
-          <button type="button" className="btn btn-dark" onClick={this.handleNextClick} disabled={Math.ceil(this.state.totalResults / this.state.pageSize) <= this.state.page}>Next &rarr;</button>
-        </div>
-      </div>
+      <>
+        <h1 className='text-center my-2'>NewsChimp - Top Headlines from {this.capitalizeFirstLetter(this.state.category)}</h1>
+        {/* {this.state.loading ? <div style={{ minHeight: "75vh" }}><Spinner></Spinner></div> : */}
+        <InfiniteScroll
+          dataLength={this.state.articles.length}
+          next={this.fetchMoreData}
+          hasMore={this.state.totalResults >= this.state.articles.length}
+          loader={<Spinner></Spinner>}
+        ><div className="container my-3">
+            <div className="row" >
+              {this.state.articles.map((article) =>
+                <div className="col-md-4" key={article.url} >
+                  <NewsItem title={article.title} description={article.description} imageUrl={article.urlToImage} newsUrl={article.url} author={article.author ? article.author : "Staff"} date={article.publishedAt} source={article.source.name} />
+                </div>)
+              }
+            </div>
+          </div>
+        </InfiniteScroll>
+        {/* } */}
+      </>
     )
   }
 }
