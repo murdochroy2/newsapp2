@@ -9,7 +9,7 @@ const News = (props) => {
   const [loading, setLoading] = useState(true)
   const [page, setPage] = useState(1)
   const [totalResults, setTotalResults] = useState(0)
-  const [pageSize, setPageSize] = useState(4)
+  const [pageSize, setPageSize] = useState(20)
   // document.title = `NewsChimp | ${capitalizeFirstLetter(props.category)}`
   const componentDidMount = async () => {
     // setLoading(true)
@@ -66,10 +66,11 @@ const News = (props) => {
     return string.charAt(0).toUpperCase() + string.slice(1);
   }
   const fetchMoreData = async () => {
-    setPage(page + 1)
-    console.log("page: ", page, "fetching more data")
+    let newPage = page + 1
+    console.log("page: ", newPage, "fetching more data")
 
-    let url = `https://newsapi.org/v2/top-headlines?country=${props.country}&category=${props.category}&apiKey=${props.apiKey}&page=` + page + "&pageSize=" + pageSize
+    let url = `https://newsapi.org/v2/top-headlines?country=${props.country}&category=${props.category}&apiKey=${props.apiKey}&page=` + newPage + "&pageSize=" + pageSize
+    setPage(newPage)
     let data = await fetch(url)
     let parsedData = await data.json()
     setArticles(articles.concat(parsedData.articles))
@@ -82,7 +83,7 @@ const News = (props) => {
       <InfiniteScroll
         dataLength={articles.length}
         next={fetchMoreData}
-        hasMore={totalResults >= articles.length}
+        hasMore={totalResults != articles.length}
         loader={<Spinner></Spinner>}
       ><div className="container my-3">
           <div className="row" >
