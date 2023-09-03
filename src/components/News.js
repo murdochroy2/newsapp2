@@ -79,7 +79,7 @@ export class News extends Component {
   ]
   static defaultProps = {
     country: "in",
-    pageSize: 3,
+    pageSize: 4,
     category: "general"
   }
   static prpoTypes = {
@@ -102,7 +102,7 @@ export class News extends Component {
 
   async componentDidMount() {
     // this.setState({ loading: true })
-    // let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=59caab13f9bc472a8485fc671d842e48&page=` + this.state.page + "&pageSize=" + this.state.pageSize
+    // let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=${this.props.apiKey}&page=` + this.state.page + "&pageSize=" + this.state.pageSize
     // let data = await fetch(url)
     // let parsedData = await data.json()
     // this.setState({ articles: parsedData.articles, totalResults: parsedData.totalResults, loading: false })
@@ -116,7 +116,7 @@ export class News extends Component {
     // this.setState({ loading: true })
     let page = this.state.page - 1
     await this.setState({ page: page })
-    // let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=59caab13f9bc472a8485fc671d842e48&page=` + page + "&pageSize=" + this.state.pageSize
+    // let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=${this.props.apiKey}&page=` + page + "&pageSize=" + this.state.pageSize
     // let data = await fetch(url)
     // let parsedData = await data.json()
     // this.setState({ articles: parsedData.articles, loading: false })
@@ -126,7 +126,7 @@ export class News extends Component {
     // this.setState({ loading: true })
     let page = this.state.page + 1
     await this.setState({ page: page })
-    // let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=59caab13f9bc472a8485fc671d842e48&page=` + page + "&pageSize=" + this.state.pageSize
+    // let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=${this.props.apiKey}&page=` + page + "&pageSize=" + this.state.pageSize
     // let data = await fetch(url)
     // let parsedData = await data.json()
     // this.setState({ articles: parsedData.articles, loading: false })
@@ -137,14 +137,13 @@ export class News extends Component {
     console.log("setProgress", this.props.setProgress);
     this.props.setProgress(10)
     this.setState({ loading: true })
-    let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=59caab13f9bc472a8485fc671d842e48&page=` + this.state.page + "&pageSize=" + this.state.pageSize
+    let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=${this.props.apiKey}&page=` + this.state.page + "&pageSize=" + this.state.pageSize
     this.props.setProgress(30)
     let data = await fetch(url)
     this.props.setProgress(70)
     let parsedData = await data.json()
     this.setState({ articles: this.state.articles.concat(parsedData.articles), loading: false, totalResults: parsedData.articles.length })
     this.props.setProgress(100)
-    // console.log(this.state.totalResults, this.state.articles.length);
   }
   capitalizeFirstLetter = (string) => {
     return string.charAt(0).toUpperCase() + string.slice(1);
@@ -153,7 +152,7 @@ export class News extends Component {
     this.setState({ page: this.state.page + 1 }, async () => {
       console.log("page: ", this.state.page, "fetching more data")
 
-      let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=59caab13f9bc472a8485fc671d842e48&page=` + this.state.page + "&pageSize=" + this.state.pageSize
+      let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=${this.props.apiKey}&page=` + this.state.page + "&pageSize=" + this.state.pageSize
       let data = await fetch(url)
       let parsedData = await data.json()
       this.setState({ articles: this.state.articles.concat(parsedData.articles), totalResults: parsedData.totalResults })
