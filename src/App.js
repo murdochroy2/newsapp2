@@ -17,7 +17,7 @@ export const App = () => {
 
   return (
     <div>
-      <Router>
+      {/* <Router> Router component already present in index.js */}
         <Navbar />
         <LoadingBar height={3} color="#f11946" progress={progress} /><div>
           {/* A <Switch> looks through its children <Route>s and
@@ -33,7 +33,7 @@ export const App = () => {
             <Route path="/technology" element={<News apiKey={apiKey} setProgress={setProgress} key="sports" category="Technology" />}></Route>
           </Routes>
         </div>
-      </Router>
+      {/* </Router> */}
     </div>
   )
 
