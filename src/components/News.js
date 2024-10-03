@@ -5,7 +5,7 @@ import PropTypes from 'prop-types'
 import InfiniteScroll from 'react-infinite-scroll-component';
 
 const News = (props) => {
-  const defaultArticles = [
+  let defaultArticles = [
     {
       "source": { "id": "fox-sports", "name": "Fox Sports" },
       "author": null,
@@ -77,6 +77,7 @@ const News = (props) => {
       "content": "Copyright © 2023 Bleacher Report, Inc. Turner Broadcasting System, Inc.\r\n All Rights Reserved.\r\n BleacherReport.com is part of Bleacher Report Turner Sports Network, part of the Turner Sports and Ent… [+200 chars]"
     }
   ]
+  defaultArticles = []
   const [articles, setArticles] = useState(defaultArticles)
   const [loading, setLoading] = useState(true)
   const [page, setPage] = useState(1)
@@ -126,8 +127,7 @@ const News = (props) => {
     let data = await fetch(url)
     props.setProgress(70)
     let parsedData = await data.json()
-    // setArticles(articles.concat(parsedData.articles))
-    setArticles(articles.concat(defaultArticles))
+    setArticles(articles.concat(parsedData.articles))
     setLoading(true)
     setTotalResults(parsedData.totalResults)
     props.setProgress(100)
@@ -145,8 +145,8 @@ const News = (props) => {
     setPage(newPage)
     let data = await fetch(url)
     let parsedData = await data.json()
-    // setArticles(articles.concat(parsedData.articles))
-    setArticles(articles.concat(defaultArticles))
+    setArticles(articles.concat(parsedData.articles))
+    // setArticles(articles.concat(defaultArticles))
     setTotalResults(parsedData.totalResults)
   };
   return (
