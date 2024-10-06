@@ -84,6 +84,7 @@ const News = (props) => {
   const [totalResults, setTotalResults] = useState(0)
   const [pageSize, setPageSize] = useState(20)
   // document.title = `NewsChimp | ${capitalizeFirstLetter(props.category)}`
+  const NEWSAPI_URL = process.env.REACT_APP_NEWSAPI_URL
   const componentDidMount = async () => {
     // setLoading(true)
     // let url = `https://newsapi.org/v2/top-headlines?country=${props.country}&category=${props.category}&apiKey=${props.apiKey}&page=` + page + "&pageSize=" + pageSize
@@ -122,7 +123,7 @@ const News = (props) => {
   const updateNews = async () => {
     props.setProgress(10)
     setLoading(true)
-    let url = `https://newsapi.org/v2/top-headlines?country=${props.country}&category=${props.category}&apiKey=${props.apiKey}&page=` + page + "&pageSize=" + pageSize
+    let url = `{NEWSAPI_URL}/v2/top-headlines?country=${props.country}&category=${props.category}&apiKey=${props.apiKey}&page=` + page + "&pageSize=" + pageSize
     props.setProgress(30)
     let data = await fetch(url)
     props.setProgress(70)
@@ -141,7 +142,7 @@ const News = (props) => {
     let newPage = page + 1
     console.log("page: ", newPage, "fetching more data")
 
-    let url = `https://newsapi.org/v2/top-headlines?country=${props.country}&category=${props.category}&apiKey=${props.apiKey}&page=` + newPage + "&pageSize=" + pageSize
+    let url = `{NEWSAPI_URL}/v2/top-headlines?country=${props.country}&category=${props.category}&apiKey=${props.apiKey}&page=` + newPage + "&pageSize=" + pageSize
     setPage(newPage)
     let data = await fetch(url)
     let parsedData = await data.json()
